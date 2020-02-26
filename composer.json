@@ -1,0 +1,19 @@
+{
+    "name": "damianlewis/oc-api-plugin",
+    "description": "API plugin for October CMS.",
+    "type": "october-plugin",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Damian Lewis",
+            "email": "damian@damianlewis.co.uk"
+        }
+    ],
+    "require": {
+        "php": ">= 7.1",
+        "composer/installers": "~1.0",
+        "laravel/framework": "5.5.*",
+        "league/fractal": "^0.19.2",
+        "october/system": "^1.0"
+    }
+}
