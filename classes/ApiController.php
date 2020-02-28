@@ -34,16 +34,20 @@ class ApiController extends Controller
 
 //        $manager->setSerializer(new JsonApiSerializer());
         $this->fractalManager = $manager;
+
+        if (isset($_GET['include'])) {
+            $this->fractalManager->parseIncludes($_GET['include']);
+        }
     }
 
     /**
      * Returns a transformed collection of eloquent models in JSON format.
      *
      * @param  EloquentCollection  $collection
-     * @param  Transformable  $transformer
+     * @param  TransformerInterface  $transformer
      * @return JsonResponse
      */
-    public function respondWithCollection(EloquentCollection $collection, Transformable $transformer): JsonResponse
+    public function respondWithCollection(EloquentCollection $collection, TransformerInterface $transformer): JsonResponse
     {
         $resource = new Collection($collection, $transformer);
 
@@ -56,10 +60,10 @@ class ApiController extends Controller
      * Returns a transformed collection of paginated models in JSON format.
      *
      * @param  LengthAwarePaginator  $paginator
-     * @param  Transformable  $transformer
+     * @param  TransformerInterface  $transformer
      * @return JsonResponse
      */
-    public function respondWithPagination(LengthAwarePaginator $paginator, Transformable $transformer): JsonResponse
+    public function respondWithPagination(LengthAwarePaginator $paginator, TransformerInterface $transformer): JsonResponse
     {
         $resource = new Collection($paginator->getCollection(), $transformer);
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
@@ -73,10 +77,10 @@ class ApiController extends Controller
      * Returns a transformed model in JSON format.
      *
      * @param  Model  $item
-     * @param  Transformable  $transformer
+     * @param  TransformerInterface  $transformer
      * @return JsonResponse
      */
-    public function respondWithItem(Model $item, Transformable $transformer): JsonResponse
+    public function respondWithItem(Model $item, TransformerInterface $transformer): JsonResponse
     {
         $resource = new Item($item, $transformer);
 
