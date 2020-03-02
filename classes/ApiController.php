@@ -3,7 +3,6 @@
 namespace DamianLewis\Api\Classes;
 
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use League\Fractal\Manager;
@@ -11,6 +10,7 @@ use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
 use Model;
+use October\Rain\Database\Collection as OctoberCollection;
 use Response;
 
 class ApiController extends Controller
@@ -18,12 +18,12 @@ class ApiController extends Controller
     /**
      * @var int
      */
-    protected $statusCode = 200;
+    private $statusCode = 200;
 
     /**
      * @var Manager
      */
-    protected $fractalManager;
+    private $fractalManager;
 
     /**
      * @param  Manager  $manager
@@ -41,19 +41,16 @@ class ApiController extends Controller
     }
 
     /**
-     * Returns a transformed collection of eloquent models in JSON format.
+     * Returns a transformed collection of models in JSON format.
      *
-     * @param  EloquentCollection  $collection
-     * @param  TransformerInterface  $transformer
+     * @param  OctoberCollection  $collection
      * @return JsonResponse
      */
-    public function respondWithCollection(EloquentCollection $collection, TransformerInterface $transformer): JsonResponse
+    public function respondWithCollection(OctoberCollection $collection, Transformer $transformer): JsonResponse
     {
         $resource = new Collection($collection, $transformer);
 
-        return $this->respond([
-            $this->fractalManager->createData($resource)->toArray()
-        ]);
+        return $this->respond($this->fractalManager->createData($resource)->toArray());
     }
 
     /**
@@ -123,7 +120,7 @@ class ApiController extends Controller
      * @param  int  $options
      * @return JsonResponse
      */
-    protected function respond(array $data, array $headers = [], int $options = 0): JsonResponse
+    private function respond(array $data, array $headers = [], int $options = 0): JsonResponse
     {
         return Response::json($data, $this->getStatusCode(), $headers, $options);
     }
@@ -134,7 +131,7 @@ class ApiController extends Controller
      * @param  string  $message
      * @return JsonResponse
      */
-    protected function respondWithError(string $message): JsonResponse
+    private function respondWithError(string $message): JsonResponse
     {
         return $this->respond([
             'error' => [
@@ -149,7 +146,7 @@ class ApiController extends Controller
      *
      * @return int
      */
-    protected function getStatusCode(): int
+    private function getStatusCode(): int
     {
         return $this->statusCode;
     }
@@ -160,7 +157,7 @@ class ApiController extends Controller
      * @param  int  $statusCode
      * @return void
      */
-    protected function setStatusCode(int $statusCode): void
+    private function setStatusCode(int $statusCode): void
     {
         $this->statusCode = $statusCode;
     }
