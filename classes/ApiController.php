@@ -9,6 +9,7 @@ use League\Fractal\Manager;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
+//use League\Fractal\Serializer\ArraySerializer;
 use Model;
 use October\Rain\Database\Collection as OctoberCollection;
 use Response;
@@ -30,9 +31,7 @@ class ApiController extends Controller
      */
     public function __construct(Manager $manager)
     {
-        $this->middleware('api');
-
-//        $manager->setSerializer(new JsonApiSerializer());
+//        $manager->setSerializer(new ArraySerializer());
         $this->fractalManager = $manager;
 
         if (isset($_GET['include'])) {
