@@ -43,6 +43,7 @@ class ApiController extends Controller
      * Returns a transformed collection of models in JSON format.
      *
      * @param  OctoberCollection  $collection
+     * @param  Transformer  $transformer
      * @return JsonResponse
      */
     public function respondWithCollection(OctoberCollection $collection, Transformer $transformer): JsonResponse
@@ -56,33 +57,29 @@ class ApiController extends Controller
      * Returns a transformed collection of paginated models in JSON format.
      *
      * @param  LengthAwarePaginator  $paginator
-     * @param  TransformerInterface  $transformer
+     * @param  Transformer  $transformer
      * @return JsonResponse
      */
-    public function respondWithPagination(LengthAwarePaginator $paginator, TransformerInterface $transformer): JsonResponse
+    public function respondWithPagination(LengthAwarePaginator $paginator, Transformer $transformer): JsonResponse
     {
         $resource = new Collection($paginator->getCollection(), $transformer);
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
-        return $this->respond([
-            $this->fractalManager->createData($resource)->toArray()
-        ]);
+        return $this->respond($this->fractalManager->createData($resource)->toArray());
     }
 
     /**
      * Returns a transformed model in JSON format.
      *
      * @param  Model  $item
-     * @param  TransformerInterface  $transformer
+     * @param  Transformer  $transformer
      * @return JsonResponse
      */
-    public function respondWithItem(Model $item, TransformerInterface $transformer): JsonResponse
+    public function respondWithItem(Model $item, Transformer $transformer): JsonResponse
     {
         $resource = new Item($item, $transformer);
 
-        return $this->respond([
-            $this->fractalManager->createData($resource)->toArray()
-        ]);
+        return $this->respond($this->fractalManager->createData($resource)->toArray());
     }
 
     /**
